@@ -4,6 +4,8 @@ import { auth, getTokenInit, onMessageListener } from './../configs/firebase';
 import { getUserFetch, getUser, signout, getUsersFetch, setDeviceToken } from './../redux/reducers/usersState';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
+import { Paper, TextField, Button, Typography, Link, Grid, Avatar } from '@mui/material';
+import LockIcon from '@mui/icons-material/Lock';
 
 const LoginPage = () => {
     const dispatch = useDispatch();
@@ -12,6 +14,10 @@ const LoginPage = () => {
         email: '',
         password: '',
     });
+
+    const paperStyle = { padding: 20, height: '70vh', width: 280, margin: "20px auto" }
+    const avatarStyle = { backgroundColor: '#1bbd7e' }
+    const btnstyle = { margin: '8px 0' }
 
     const onChange = (e) => {
         const name = e.target.name;
@@ -35,17 +41,27 @@ const LoginPage = () => {
             })
     };
     return (
-        <div>
-            <hr />
-            <h3>Sign In</h3>
-            <div className='form'>
-                <input type='email' name='email' onChange={onChange} placeholder='Enter email' value={state.email} />
-                <br />
-                <input type='password' name='password' onChange={onChange} placeholder='Enter password' value={state.password} />
-                <br />
-                <button type='submit' onClick={onSubmit}>Sign In</button>
-            </div>
-        </div>
+        < Grid >
+            <Paper elevation={10} style={paperStyle}>
+                <Grid align='center'>
+                    <Avatar style={avatarStyle}><LockIcon /></Avatar>
+                    <h2>Sign In</h2>    
+                </Grid>
+                <TextField label='Email' placeholder='Enter email' type='email' name='email' onChange={onChange} fullWidth required sx={{ marginBottom: 1 }} />
+                <TextField label='Password' placeholder='Enter password' type='password' name='password' onChange={onChange} fullWidth required />
+                <Button type='submit' color='primary' variant="contained" style={btnstyle} onClick={onSubmit} fullWidth>Sign in</Button>
+                <Typography >
+                     <Link href="#" >
+                        Forgot password ?
+                </Link>
+                </Typography>
+                <Typography > Do you have an account ?
+                     <Link href="#" >
+                        Sign Up 
+                </Link>
+                </Typography>
+            </Paper>
+        </Grid >
     );
 }
 
