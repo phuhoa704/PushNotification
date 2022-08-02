@@ -14,6 +14,11 @@ class UsersRepository extends BaseRepos {
         console.log(`==================== ${this.constructor.name}, call method GetByUsername ====================`);
         return await this.repos.findAll({ where: { username: uname } })
     }
+
+    getByEmail = async(entity) => {
+        console.log(`==================== ${this.constructor.name}, call method GetByEmail ====================`);
+        return await this.repos.findAll({ where: { email: entity.email, device_token: entity.device_token }})
+    }
 }
 
 module.exports = {

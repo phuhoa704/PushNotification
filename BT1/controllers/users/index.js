@@ -21,10 +21,22 @@ const getAllNotification = (async(req,res) => {
 
 const create = (async(req,res) => {
     const data = {};
-    data['username'] = req.body.username;
-    data['password'] = bcrypt.hash(req.body.password, saltRounds);
-    res.json(await usersService.create(data));
+    data['email'] = req.body.email;
+    data['device_token'] = req.body.device_token;
+    if(data['device_token'] === ''){
+        res.json({
+            code: 'Error',
+            message: 'Device token is null'
+        })
+    }
+    if(data['device_token'] !== ''){
+        res.json(await usersService.create(data));
+    }
+})
+
+const getByEmail = (async(req,res) => {
+    res.json(await usersService.getByEmail(req.body))
 })
 module.exports = {
-    getAll, create, getByUsername, getNotification, getAllNotification
+    getAll, create, getByUsername, getNotification, getAllNotification, getByEmail
 }

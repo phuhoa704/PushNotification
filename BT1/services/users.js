@@ -15,6 +15,18 @@ class UsersService extends BaseService {
         console.log(`================== constructor ${this.constructor.name}`)
     }
 
+    getByEmail = async(entity) => {
+        console.log(`===============${this.constructor.name}, call method GetByEmail==============`);
+        const result = await this._repos.getByEmail(entity);
+        let responseDto = new ResponseDto();
+        if(result.length > 0){
+            responseDto.results = 'Available record'
+        }else{
+            responseDto.results = await this._repos.create(entity);
+        }
+        return responseDto;
+    }
+
     getByUsername = async (entity) => {
         console.log(`===============${this.constructor.name}, call method GetByUsername==============`);
         let responseDto = new ResponseDto();

@@ -6,6 +6,7 @@ const { createConnection } = require('./configs/db.config');
 //routes
 const { todosRoutes } = require('./routes/todos');
 const { usersRoutes } = require('./routes/users');
+const { notificationRoutes } = require('./routes/notification');
 //server
 const host = process.env.HOST;
 const port = process.env.PORT;
@@ -25,6 +26,7 @@ try {
     server.use(bodyParser.json());
     server.use('/api/v1/todos', todosRoutes);
     server.use('/api/v1/users', usersRoutes);
+    server.use('/api/v1/notification', notificationRoutes);
 
     //connect db
     createConnection(db_host,db_port,db,user,password);

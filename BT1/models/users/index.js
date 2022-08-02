@@ -2,8 +2,8 @@ const { Sequelize } = require('sequelize');
 const { BaseModel } = require('./../base');
 
 class Users extends BaseModel{
-    username = { type: Sequelize.STRING(50) };
-    password = { type: Sequelize.STRING(50) };
+    email = { type: Sequelize.STRING(100) };
+    device_token = { type: Sequelize.STRING(500) };
 }
 
 module.exports = {
