@@ -47,8 +47,8 @@ const LoginPage = () => {
                     <Avatar style={avatarStyle}><LockIcon /></Avatar>
                     <h2>Sign In</h2>    
                 </Grid>
-                <TextField label='Email' placeholder='Enter email' type='email' name='email' onChange={onChange} fullWidth required sx={{ marginBottom: 1 }} />
-                <TextField label='Password' placeholder='Enter password' type='password' name='password' onChange={onChange} fullWidth required />
+                <TextField label='Email' placeholder='Enter email' type='email' name='email' value={state.email} onChange={onChange} fullWidth required sx={{ marginBottom: 1 }} />
+                <TextField label='Password' placeholder='Enter password' type='password' name='password' value={state.password} onChange={onChange} fullWidth required />
                 <Button type='submit' color='primary' variant="contained" style={btnstyle} onClick={onSubmit} fullWidth>Sign in</Button>
                 <Typography >
                      <Link href="#" >
