@@ -4,78 +4,83 @@ import { getUserFetch, getUser, signout, getUsersFetch } from './redux/reducers/
 import { auth, getTokenInit, onMessageListener } from './configs/firebase';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Snackbar from '@mui/material/Snackbar';
+import Sidebar from './components/Sidebar/sidebar';
+import LoginPage from './pages/loginPage';
+import HomePage from './pages/homePage';
+import NotificationPage from './pages/notificationPage';
+import { Routes, Route } from 'react-router-dom';
 import axios from 'axios';
 import _ from 'lodash';
 import './App.css';
 
 function App() {
-    const [state, setState] = useState({
-        email: '',
-        password: '',
-        taskname: '',
-        checkbox: false,
-    });
-    const [dataNotify, setDataNotify] = useState({
-        title: '',
-        body: ''
-    })
-    const [open, setOpen] = useState(false);
-    const [tokenFound, setTokenFound] = useState(false);
-    const [deviceToken, setDeviceToken] = useState('');
-    const dispatch = useDispatch();
-    const user = useSelector(getUser);
+    // const [state, setState] = useState({
+    //     email: '',
+    //     password: '',
+    //     taskname: '',
+    //     checkbox: false,
+    // });
+    // const [dataNotify, setDataNotify] = useState({
+    //     title: '',
+    //     body: ''
+    // })
+    // const [open, setOpen] = useState(false);
+    // const [tokenFound, setTokenFound] = useState(false);
+    // const [deviceToken, setDeviceToken] = useState('');
+    // const dispatch = useDispatch();
+    // const user = useSelector(getUser);
 
-    getTokenInit(setTokenFound,setDeviceToken);
-    onMessageListener().then(payload => {
-        setOpen(true);
-        setDataNotify({title: payload.notification.title, body: payload.notification.body})
-        console.log(payload);
-      }).catch(err => console.log('failed: ', err));
+    // getTokenInit(setTokenFound, setDeviceToken);
+    // onMessageListener().then(payload => {
+    //     setOpen(true);
+    //     setDataNotify({ title: payload.notification.title, body: payload.notification.body })
+    //     console.log(payload);
+    // }).catch(err => console.log('failed: ', err));
 
-    const onChange = (e) => {
-        const name = e.target.name;
-        const value = e.target.value;
-        setState({
-            ...state,
-            [name]: value
-        })
-    }
+    // const onChange = (e) => {
+    //     const name = e.target.name;
+    //     const value = e.target.value;
+    //     setState({
+    //         ...state,
+    //         [name]: value
+    //     })
+    // }
 
-    if(tokenFound === true && open === true){
-        axios.post('http://localhost:3300/api/v1/users/notify', {device_token:deviceToken, user: user, notification: dataNotify})
-    }
+    // if (tokenFound === true && open === true) {
+    //     axios.post('http://localhost:3300/api/v1/users/notify', { device_token: deviceToken, user: user, notification: dataNotify })
+    // }
 
-    const onSubmit = (e) => {
-        e.preventDefault();
-        signInWithEmailAndPassword(auth, state.email, state.password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                dispatch(getUserFetch(user))
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-    }
+    // const onSubmit = (e) => {
+    //     e.preventDefault();
+    //     signInWithEmailAndPassword(auth, state.email, state.password)
+    //         .then((userCredential) => {
+    //             const user = userCredential.user;
+    //             dispatch(getUserFetch(user))
+    //         })
+    //         .catch((error) => {
+    //             console.log(error)
+    //         })
+    // }
 
-    const onSignOut = () => {
-        dispatch(signout())
+    // const onSignOut = () => {
+    //     dispatch(signout())
+    // }
 
-    }
+    // const handlePushDataNotify = () => {
+    //     //axios.post('http://localhost:3300/api/v1/notifi ', { title: 'Đây là title', body: 'đây là body' })
+    //     setOpen(true)
+    // }
 
-    const handlePushDataNotify = () => {
-        //axios.post('http://localhost:3300/api/v1/notifi ', { title: 'Đây là title', body: 'đây là body' })
-        setOpen(true)
-    }
-
-    const handleClose = () => {
-        setOpen(false)
-    }
+    // const handleClose = () => {
+    //     setOpen(false)
+    // }
 
 
     return (
         <div className="App">
-            {!_.isEmpty(user) ? (
+            {/* {!_.isEmpty(user) ? (
                 <div>
+                    <Sidebar />
                     <div className='user'>
                         <p>Hello, {user.username}</p>
                         <button onClick={handlePushDataNotify}> Click to me </button>
@@ -100,7 +105,12 @@ function App() {
                         <button type='submit' onClick={onSubmit}>Sign In</button>
                     </div>
                 </div>
-            )}
+            )} */}
+            <Routes>
+                <Route path='/' element={<LoginPage />}/>
+                <Route path='/users-list' element={<HomePage />}/>
+                <Route path='/notification' element={<NotificationPage />} />
+            </Routes>
         </div>
     );
 }

@@ -5,8 +5,9 @@ const usersSlice = createSlice({
     initialState: {
         user: {},
         isLoading: false,
-        token: '',
-        users: []
+        device_token: '',
+        users: [],
+        message: ''
     },
     reducers: {
         getUserFetch: (state, action) => {
@@ -37,11 +38,24 @@ const usersSlice = createSlice({
             localStorage.removeItem('username');
             localStorage.removeItem('token');
             state.message = ''
+        },
+        addUserRequest: (state, action) => {
+            state.isLoading = true;
+        },
+        addUserRequestSuccess: (state) => {
+            state.isLoading = false;
+        },
+        pushNotification: (state, action) => {
+            state.isLoading = true;
+        },
+        pushNotificationSuccess: (state, action) => {
+            state.isLoading = false;
+            state.message = action.payload;
         }
     }
 })
 
-export const {getUserFetch, getUserFetchSuccess, getUserFetchFailed,signout, getUserFetchMessage, getUsersFetch, getUsersFetchSuccess, setDeviceToken} = usersSlice.actions;
+export const {getUserFetch, getUserFetchSuccess, getUserFetchFailed,signout, getUserFetchMessage, getUsersFetch, getUsersFetchSuccess, setDeviceToken, addUserRequest, addUserRequestSuccess, pushNotification, pushNotificationSuccess} = usersSlice.actions;
 export const getUser = state => state.user.user;
 export const getUsers = state => state.user.users;
 export const getIsLoading = state => state.user.isLoading;
