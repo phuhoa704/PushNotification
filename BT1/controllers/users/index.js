@@ -19,7 +19,7 @@ const getAllNotification = (async(req,res) => {
     res.json(await usersService.getAllNotifications(req.body))
 })
 
-const create = (async(req,res) => {
+const createUser = (async(req,res) => {
     const data = {};
     data['email'] = req.body.email;
     data['device_token'] = req.body.device_token;
@@ -30,7 +30,7 @@ const create = (async(req,res) => {
         })
     }
     if(data['device_token'] !== ''){
-        res.json(await usersService.create(data));
+        res.json(await usersService.getByEmail(data));
     }
 })
 
@@ -38,5 +38,5 @@ const getByEmail = (async(req,res) => {
     res.json(await usersService.getByEmail(req.body))
 })
 module.exports = {
-    getAll, create, getByUsername, getNotification, getAllNotification, getByEmail
+    getAll, createUser, getByUsername, getNotification, getAllNotification, getByEmail
 }

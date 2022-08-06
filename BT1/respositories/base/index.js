@@ -23,6 +23,11 @@ class BaseRepos {
         console.log(`==================== ${this.constructor.name}, call method Create ====================`);
         return await this.repos.create(entity, {returning: true})
     }
+
+    delete = async(id) => {
+        console.log(`==================== ${this.constructor.name}, call method Delete ====================`);
+        return await this.repos.destroy({ where: { id: id }})
+    }
 }
 
 module.exports = {

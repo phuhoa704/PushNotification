@@ -19,6 +19,13 @@ class BaseService {
         responseDto.results = this._repos.create(entity);
         return responseDto;
     }
+
+    delete = async(id) => {
+        console.log(`===============${this.constructor.name}, call method Delete==============`);
+        let responseDto = new ResponseDto();
+        responseDto.results = this._repos.delete(id);
+        return responseDto;
+    }
 }
 
 module.exports = {

@@ -4,9 +4,9 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const { createConnection } = require('./configs/db.config');
 //routes
-const { todosRoutes } = require('./routes/todos');
 const { usersRoutes } = require('./routes/users');
 const { notificationRoutes } = require('./routes/notification');
+const { typesRoutes } = require('./routes/types');
 //server
 const host = process.env.HOST;
 const port = process.env.PORT;
@@ -24,9 +24,10 @@ try {
     server.use(express.json());
     server.use(express.urlencoded({ extended: true }))
     server.use(bodyParser.json());
-    server.use('/api/v1/todos', todosRoutes);
+    server.use(bodyParser.urlencoded({ extended: true }));
     server.use('/api/v1/users', usersRoutes);
     server.use('/api/v1/notification', notificationRoutes);
+    server.use('/api/v1/types',typesRoutes);
 
     //connect db
     createConnection(db_host,db_port,db,user,password);
