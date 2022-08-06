@@ -5,8 +5,8 @@ const getAll = (async (req, res) => {
     res.json(await notificationService.getAll());
 })
 
-const sendPushToTopic = (async(req,res) => {
-    try{
+const sendPushToTopic = (async (req, res) => {
+    try {
         const data = {};
         data['title'] = req.body.title;
         data['body'] = req.body.body;
@@ -14,12 +14,12 @@ const sendPushToTopic = (async(req,res) => {
         data['image'] = req.body.image;
         data['icon'] = req.body.icon;
         data['url'] = req.body.url;
-        await notificationService.sendPushToTopic({...data, time: req.body.time});
+        await notificationService.sendPushToTopic({ ...data, time: req.body.time });
         res.json({
             errorCode: 200,
             message: 'Send to topic successfully'
         })
-    }catch(err){
+    } catch (err) {
         console.log(err);
         res.json({
             error: true,
@@ -28,8 +28,8 @@ const sendPushToTopic = (async(req,res) => {
     }
 })
 
-const subscribeToTopic = (async(req,res) => {
-    try{
+const subscribeToTopic = (async (req, res) => {
+    try {
         const data = {};
         data['tokens'] = req.body.tokens;
         data['topicName'] = req.body.topicName;
@@ -38,7 +38,7 @@ const subscribeToTopic = (async(req,res) => {
             errorCode: 200,
             message: 'Subscribe successfully'
         })
-    }catch(err){
+    } catch (err) {
         console.log(err);
         res.json({
             error: true,
@@ -47,8 +47,8 @@ const subscribeToTopic = (async(req,res) => {
     }
 })
 
-const unsubscribeFromTopic = (async(req,res) => {
-    try{
+const unsubscribeFromTopic = (async (req, res) => {
+    try {
         const data = {};
         data['tokens'] = req.body.tokens;
         data['topicName'] = req.body.topicName;
@@ -57,7 +57,7 @@ const unsubscribeFromTopic = (async(req,res) => {
             errorCode: 200,
             message: 'Unsubscribe successfully'
         })
-    }catch(err){
+    } catch (err) {
         console.log(err);
         res.json({
             error: true,
@@ -66,8 +66,8 @@ const unsubscribeFromTopic = (async(req,res) => {
     }
 })
 
-const pushSingleToken = (async(req,res) => {
-    try{
+const pushNotification = (async (req, res) => {
+    try {
         const data = {};
         data['title'] = req.body.title;
         data['body'] = req.body.body;
@@ -75,9 +75,42 @@ const pushSingleToken = (async(req,res) => {
         data['image'] = req.body.image;
         data['icon'] = req.body.icon;
         data['url'] = req.body.url;
-        await notificationService.pushSingleToken({...data, time: req.body.time});
+        await notificationService.pushNotification(data);
+        data.device_token?.forEach(item => {
+            let record = {};
+            record['device_token'] = item;
+            record['title'] = data.title;
+            record['body'] = data.body;
+            record['image'] = data.image;
+            record['icon'] = data.icon;
+            record['url'] = data.url;
+            notificationService.create(record)
+        })
+        res.json({
+            code: '200',
+            message: 'Push notification successfully'
+        })
+    } catch (err) {
+        console.log(err);
+        res.json({
+            error: true,
+            message: err
+        })
+    }
+})
+/* 
+const pushSingleToken = (async (req, res) => {
+    try {
+        const data = {};
+        data['title'] = req.body.title;
+        data['body'] = req.body.body;
+        data['device_token'] = req.body.token;
+        data['image'] = req.body.image;
+        data['icon'] = req.body.icon;
+        data['url'] = req.body.url;
+        await notificationService.pushSingleToken({ ...data, time: req.body.time });
         res.json(await notificationService.create(data));
-    }catch(err){
+    } catch (err) {
         console.log(err);
         res.json({
             error: true,
@@ -86,8 +119,8 @@ const pushSingleToken = (async(req,res) => {
     }
 });
 
-const pushMultipleToken = (async(req,res) => {
-    try{
+const pushMultipleToken = (async (req, res) => {
+    try {
         const data = {};
         data['title'] = req.body.title;
         data['body'] = req.body.body;
@@ -95,7 +128,7 @@ const pushMultipleToken = (async(req,res) => {
         data['image'] = req.body.image;
         data['icon'] = req.body.icon;
         data['url'] = req.body.url;
-        await notificationService.pushMultipleToken({...data, time: req.body.time})
+        await notificationService.pushMultipleToken({ ...data, time: req.body.time })
         data?.device_token?.forEach(token => {
             const item = {};
             item['device_token'] = token;
@@ -110,15 +143,15 @@ const pushMultipleToken = (async(req,res) => {
             errorCode: '200',
             message: 'Push successfully'
         })
-    }catch(err){
+    } catch (err) {
         console.log(err);
         res.json({
             error: true,
             message: err
         })
     }
-})
+}) */
 
 module.exports = {
-    getAll, pushSingleToken, pushMultipleToken, subscribeToTopic, unsubscribeFromTopic, sendPushToTopic
+    getAll, pushNotification, subscribeToTopic, unsubscribeFromTopic, sendPushToTopic
 }

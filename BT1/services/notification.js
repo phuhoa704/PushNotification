@@ -62,6 +62,35 @@ class NotificationService extends BaseService {
         })
     }
 
+    pushNotification = async(data) => {
+        console.log(`===============${this.constructor.name}, call method PushNotification ==============`);
+        let tokens = data?.device_token;
+            let message = {
+                webpush: {
+                    notification: {
+                        title: data.title,
+                        body: data.body,
+                        image: data.image,
+                        icon: data.icon
+                    },
+                },
+                data: {
+                    url: data.url,
+                    body: data.body
+                }
+            };
+            setTimeout(() => {
+                fcm.sendToMultipleToken(message, tokens, function (err, response) {
+                    if (err) {
+                        console.log("Something has gone wrong!")
+                        console.log(err)
+                    } else {
+                        console.log("Successfully sent with response: ", response)
+                    }
+                });
+            }, data?.time);
+    }
+/* 
     pushSingleToken = async (data) => {
         console.log(`===============${this.constructor.name}, call method PushSingleToken ==============`);
         let message = {
@@ -118,7 +147,7 @@ class NotificationService extends BaseService {
                 }
             });
         }, data?.time);
-    }
+    } */
 }
 
 module.exports = { NotificationService }
