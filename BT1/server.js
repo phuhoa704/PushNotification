@@ -7,6 +7,7 @@ const { createConnection } = require('./configs/db.config');
 const { usersRoutes } = require('./routes/users');
 const { notificationRoutes } = require('./routes/notification');
 const { typesRoutes } = require('./routes/types');
+const { segmentRoutes } = require('./routes/segment');
 //server
 const host = process.env.HOST;
 const port = process.env.PORT;
@@ -28,6 +29,7 @@ try {
     server.use('/api/v1/users', usersRoutes);
     server.use('/api/v1/notification', notificationRoutes);
     server.use('/api/v1/types',typesRoutes);
+    server.use('/api/v1/segment', segmentRoutes);
 
     //connect db
     createConnection(db_host,db_port,db,user,password);

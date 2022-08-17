@@ -75,7 +75,7 @@ const pushNotification = (async (req, res) => {
         data['image'] = req.body.image;
         data['icon'] = req.body.icon;
         data['url'] = req.body.url;
-        await notificationService.pushNotification(data);
+        await notificationService.pushNotification({...data, time: req.body.time});
         data.device_token?.forEach(item => {
             let record = {};
             record['device_token'] = item;
