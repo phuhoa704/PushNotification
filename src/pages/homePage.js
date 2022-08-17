@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Grid, Snackbar } from '@mui/material';
+import { Grid, Snackbar, Typography } from '@mui/material';
 import { getUserFetch, getUser, signout, getUsersFetch, getUsers, getDeviceToken, addUserRequest } from './../redux/reducers/usersState';
 import Sidebar from '../components/Sidebar/sidebar';
 import { useNavigate } from 'react-router';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
+import axios from 'axios';
 import { auth, getTokenInit, onMessageListener } from './../configs/firebase';
-import { signOut } from 'firebase/auth';
 import ModalNotification from '../components/modalNotification';
+import ModalSegment from '../components/modals/modalSegment';
 
 const HomePage = () => {
     const navigate = useNavigate();
     const users = useSelector(getUsers);
     const [open, setOpen] = useState(false);
+    const [segment, setSegment] = useState(false);
     const [visible, setVisible] = useState(false);
     const [tokenFound, setTokenFound] = useState(false);
     const [deviceToken, setDToken] = useState('');
@@ -38,16 +40,6 @@ const HomePage = () => {
     ];
     getTokenInit(setTokenFound, setDToken);
 
-    const onSignOut = () => {
-        signOut(auth).then(() => {
-            dispatch(signout())
-            return navigate('/')
-        })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
     onMessageListener().then(payload => {
         setVisible(true);
         setDataNotify({ title: payload.notification.title, body: payload.notification.body })
@@ -59,42 +51,84 @@ const HomePage = () => {
     const handleClose = () => {
         setOpen(false);
     }
+    const handleCloseSegment = () => {
+        setSegment(false);
+    }
     const dispatch = useDispatch();
     const user = useSelector(getUser);
 
+    const onClickSubscribe = () => {
+        /* axios.post('http://localhost:3300/api/v1/notification/subscribe/', {
+            tokens: selection, topicName: 'HappyBirthday'
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => console.log(res)) */
+        setSegment(true)
+    }
+
+    const onClick2 = () => {
+        axios.post('http://localhost:3300/api/v1/notification/sendToTopic', {
+            title: 'test send to topic', body: 'test send to topic', topicName: 'HappyBirthday', image: 'https://phongchongthientai.mard.gov.vn/en/PublishingImages/Notification-Add-on.png', icon: 'https://img.icons8.com/emoji/344/party-popper.png', url: 'https://google.com'
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => console.log(res))
+    }
+
+    const onClick3 = () => {
+        axios.post('http://localhost:3300/api/v1/notification/unsubscribe/', {
+            tokens: selection, topicName: 'HappyBirthday'
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => console.log(res))
+    }
 
     const onSelectionChange = (ids) => {
         const selectedIDs = new Set(ids);
-        const selectedRowData = users.filter((row) => {
-            selectedIDs.has(row.id);
+        let result = []
+        const selectedRowData = users?.filter((row) => {
+            if(selectedIDs.has(row.id)){
+                result.push(row?.device_token)
+            }
         })
-        setSelection(selectedRowData)
+        setSelection([
+            ...result
+        ])
     }
     useEffect(() => {
         dispatch(getUsersFetch())
-        if (tokenFound) {
-            dispatch(addUserRequest({ email: user.email, device_token: deviceToken }))
-        }
-    }, [dispatch])
+        dispatch(addUserRequest({ email: user.email, device_token: deviceToken }))
+    }, [deviceToken])
     return (
-        <Grid container spacing={1}>
+        <Grid container>
             <Grid item xs={3}>
                 <Sidebar />
             </Grid>
             <Grid item xs={9}>
-                <div className='user'>
-                    <a href='javascript:void(0)' onClick={onSignOut}>Sign Out</a>
-                </div>
                 <Snackbar
                     open={visible}
                     autoHideDuration={5000}
                     onClose={handleClose}
                     message={dataNotify.title + '\n' + dataNotify.body}
                 />
+                <div className='actions' style={{ height: '50px' }}>
+                    <Typography variant="h6" component="h2" sx={{ marginBottom: 1, float: 'left', marginTop: '10px' }}>
+                        All Users
+                    </Typography>
+                    <Button onClick={onClickSubscribe}>Test Subscribe</Button>
+                    {/* <Button onClick={onClick2}>Test Send to Topic</Button>
+                    <Button onClick={onClick3}>Test Unsubscribe</Button> */}
+                </div>
                 <div className='data' style={{ height: 400, width: '100%' }}>
                     <DataGrid rows={users} columns={columns} pageSize={5} rowsPerPageOptions={[5]} checkboxSelection onSelectionModelChange={onSelectionChange} />
                 </div>
             </Grid>
+            <ModalSegment open={segment} handleClose={handleCloseSegment} selection={selection}/>
             <ModalNotification open={open} handleClose={handleClose} selectedRow={selectedRow} />
         </Grid>
     );

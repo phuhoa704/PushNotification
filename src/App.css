@@ -1,3 +1,6 @@
+@import "~react-date-range/dist/styles.css";
+@import "~react-date-range/dist/theme/default.css";
+@import "components/timeline/timeline.css";
 .App {
   text-align: center;
 }
@@ -136,4 +139,17 @@ div #basic-menu{
 
 .sidebar-list .row #active {
   background-color: #293846;
+}
+
+hr {
+  color: #FFF;
+}
+
+.data {
+  margin-top: 20px;
+  margin-right: 20px;
+}
+
+.rdrDays button:hover {
+  background-color: #f4f4f4;
 }

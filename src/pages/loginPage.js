@@ -14,6 +14,7 @@ const LoginPage = () => {
         email: '',
         password: '',
     });
+    const [isLoading, setIsLoading] = useState(false);
 
     const paperStyle = { padding: 20, height: '70vh', width: 280, margin: "20px auto" }
     const avatarStyle = { backgroundColor: '#1bbd7e' }
@@ -40,6 +41,7 @@ const LoginPage = () => {
                 console.log(error)
             })
     };
+
     return (
         < Grid >
             <Paper elevation={10} style={paperStyle}>

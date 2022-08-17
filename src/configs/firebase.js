@@ -5,6 +5,7 @@ import { initializeApp } from "firebase/app";
 import { useDispatch } from "react-redux";
 import { setDeviceToken } from "../redux/reducers/usersState";
 import { getAuth } from 'firebase/auth';
+import { getStorage } from 'firebase/storage';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 //import firebase from 'firebase/compat/app';
 //import 'firebase/compat/messaging';
@@ -28,6 +29,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 const auth = getAuth();
+const storage = getStorage();
 
 export const getTokenInit = async(setTokenFound, setToken) => {
     return getToken(messaging, { vapidKey: 'BJ-mzCdjee7nkfSHt94ushkYACHgt_JqyTwRsCxm9rwrL7_YfGNrWJzxFF40iGjtvtI1D_-HuY8yFBEaY8a1OE8' })
@@ -53,4 +55,4 @@ export const onMessageListener = () =>
       resolve(payload);
     });
 });
-export { auth, messaging }
+export { auth, messaging, storage }

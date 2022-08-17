@@ -5,7 +5,8 @@ import { ROOT_API, CONTROLLERS } from '../../configs/apis';
 
 const userService = new HttpHelperService(ROOT_API, CONTROLLERS.USERSBYUSERNAME);
 const usersService = new HttpHelperService(ROOT_API, CONTROLLERS.USERS);
-const notifyService = new HttpHelperService(ROOT_API, CONTROLLERS.NOTIFICATION);
+const notificationService = new HttpHelperService(ROOT_API, CONTROLLERS.NOTIFICATION);
+//const pushService = new HttpHelperService(ROOT_API, CONTROLLERS.NOTIFY.SINGLE);
 
 function* workerGetUserFetch(action){
     const user = yield call(userService.post, '', [], action.payload);
@@ -27,7 +28,7 @@ function* workerAddUserRequest(action){
 }
 
 function* workerPushNotification(action){
-    const result = yield call(notifyService.post, '', [], action.payload);
+    const result = yield call(notificationService.post, '', [], action.payload);
     console.log(result);
     yield put(pushNotificationSuccess(result.results))
 }

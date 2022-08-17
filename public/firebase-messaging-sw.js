@@ -17,7 +17,7 @@ firebase.initializeApp(firebaseConfig);
 
 // Retrieve firebase messaging
 const messaging = firebase.messaging();
-
+const url = '';
 messaging.onBackgroundMessage(function (payload) {
   console.log('Received background message ', payload);
 
@@ -25,7 +25,27 @@ messaging.onBackgroundMessage(function (payload) {
   const notificationOptions = {
     body: payload.notification.body,
   };
+  url = payload.data?.url;
 
   self.registration.showNotification(notificationTitle,
     notificationOptions);
 });
+
+self.onnotificationclick = function (event) {
+  console.log('On notification click: ', event);
+  event.notification.close();
+
+  // This looks to see if the current is already open and
+  // focuses if it is
+  event.waitUntil(clients.matchAll({
+    type: "window"
+  }).then(function (clientList) {
+    for (const client of clientList) {
+      if (client.url === '/' && 'focus' in client)
+        return client.focus();
+    }
+    if (clients.openWindow)
+      console.log(url)
+    return clients.openWindow(url);
+  }));
+};
